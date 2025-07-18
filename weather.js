@@ -12,11 +12,11 @@ const weatherIcon = document.getElementById('weatherIcon');
 const weatherDesc = document.getElementById('weatherDesc');
 const forecastTitle = document.getElementById('forecastTitle');
 const forecastContainer = document.getElementById('forecast');
+const recentCityDropdown = document.getElementById('recentCityDropdown');
 
 function formatDate(dateStr) {
   return new Date(dateStr).toISOString().split('T')[0];
 }
-
 
 async function fetchWeatherByCity(city) {
   if (!city) return alert('Please enter a city name.');
@@ -35,11 +35,11 @@ async function fetchWeatherByCity(city) {
     const cityName = data.city.name;
     displayCurrentWeather(cityName, data.list[0]);
     displayForecast(data);
+    updateRecentCities(cityName);  
   } catch (error) {
     alert('Error fetching weather data.');
   }
 }
-
 
 async function fetchWeatherByCoordinates(lat, lon, label = 'Your Location') {
   try {
@@ -60,7 +60,6 @@ async function fetchWeatherByCoordinates(lat, lon, label = 'Your Location') {
   }
 }
 
-
 function displayCurrentWeather(city, data) {
   cityDate.textContent = `${city} (${formatDate(data.dt_txt)})`;
   tempEl.textContent = data.main.temp.toFixed(2);
@@ -71,7 +70,6 @@ function displayCurrentWeather(city, data) {
   weatherDesc.textContent = data.weather[0].description;
   currentWeather.classList.remove('hidden');
 }
-
 
 function displayForecast(data) {
   forecastTitle.classList.remove('hidden');
@@ -99,11 +97,52 @@ function displayForecast(data) {
   }
 }
 
-searchBtn.addEventListener('click', () => {
-  const city = cityInput.value.trim();
-  fetchWeatherByCity(city);
+
+
+function updateRecentCities(city) {
+  let cities = JSON.parse(localStorage.getItem('recentCities')) || [];
+  if (!cities.includes(city)) {
+    cities.unshift(city);
+    if (cities.length > 5) cities.pop(); 
+    localStorage.setItem('recentCities', JSON.stringify(cities));
+    populateRecentCityDropdown();
+  }
+}
+
+function populateRecentCityDropdown() {
+  const cities = JSON.parse(localStorage.getItem('recentCities')) || [];
+
+  if (cities.length === 0) {
+    recentCityDropdown.classList.add('hidden');
+    return;
+  }
+
+  recentCityDropdown.classList.remove('hidden');
+  recentCityDropdown.innerHTML = `<option disabled selected>Select a recent city</option>`;
+  cities.forEach(city => {
+    const option = document.createElement('option');
+    option.value = city;
+    option.textContent = city;
+    recentCityDropdown.appendChild(option);
+  });
+}
+
+
+recentCityDropdown.addEventListener('change', (e) => {
+  const selectedCity = e.target.value;
+  if (selectedCity) {
+    fetchWeatherByCity(selectedCity);
+  }
 });
 
+
+
+searchBtn.addEventListener('click', () => {
+  const city = cityInput.value.trim();
+  if (city) {
+    fetchWeatherByCity(city);
+  }
+});
 
 currentLocationBtn.addEventListener('click', () => {
   if (!navigator.geolocation) return alert('Geolocation not supported.');
@@ -116,8 +155,9 @@ currentLocationBtn.addEventListener('click', () => {
   );
 });
 
-
 window.addEventListener('load', () => {
+  populateRecentCityDropdown();
+
   if (!navigator.geolocation) return;
 
   navigator.geolocation.getCurrentPosition(
