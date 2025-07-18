@@ -88,16 +88,21 @@ function displayForecast(data) {
   for (const date in daily) {
     const item = daily[date];
     const div = document.createElement('div');
-    div.className = 'bg-gray-700 text-white rounded-md p-4 flex flex-col items-center w-28';
+    div.className = 'bg-gray-700 text-white rounded-md p-6 flex flex-col sm:flex-row justify-between items-center w-full';
+
     div.innerHTML = `
-      <div class="font-semibold mb-2">${formatDate(date)}</div>
-      <img src="https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png" class="w-10 h-10 mb-2" />
-      <div>Temp: ${item.main.temp.toFixed(2)}°C</div>
-      <div>Wind: ${item.wind.speed.toFixed(2)} M/S</div>
-      <div>Humidity: ${item.main.humidity}%</div>
+      <div class="font-semibold mb-2 sm:mb-0 sm:w-1/3">${formatDate(date)}</div>
+      <div class="flex items-center gap-4 sm:w-2/3 justify-between">
+        <img src="https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png" class="w-16 h-16" />
+        <div>Temp: ${item.main.temp.toFixed(2)}°C</div>
+        <div>Wind: ${item.wind.speed.toFixed(2)} M/S</div>
+        <div>Humidity: ${item.main.humidity}%</div>
+      </div>
     `;
+
     forecastContainer.appendChild(div);
   }
+
 }
 
 searchBtn.addEventListener('click', () => {
