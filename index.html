@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weather Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="461610.webp" type="image/x-icon">
+</head>
+<body class="bg-blue-100 min-h-screen flex flex-col">
+
+  <header class="bg-blue-600 text-white font-bold text-center py-4 text-lg">
+    Weather Dashboard
+  </header>
+
+  <main class="flex flex-col lg:flex-row max-w-6xl mx-auto mt-8 px-4 gap-8 w-full">
+    
+ 
+    <section class="flex flex-col bg-blue-200 p-6 rounded-md w-full lg:max-w-xs">
+      <label for="cityInput" class="font-semibold mb-2">Enter a City Name</label>
+      <input
+        id="cityInput"
+        type="text"
+        placeholder="E.g., New York, London, Tokyo"
+        class="p-2 rounded border border-gray-300 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-600"
+      />
+      <button
+        id="searchBtn"
+        class="bg-blue-600 text-white rounded py-2 mb-4 hover:bg-blue-700 transition"
+      >
+        Search
+      </button>
+      <div class="text-center text-gray-600 font-semibold mb-4">or</div>
+      <button
+        id="currentLocationBtn"
+        class="bg-gray-700 text-white rounded py-2 hover:bg-gray-800 transition"
+      >
+        Use Current Location
+      </button>
+    </section>
+
+    <section class="flex-1 flex flex-col gap-6 w-full">
+      <div
+        id="currentWeather"
+        class="bg-blue-600 text-white rounded-md p-6 flex flex-col sm:flex-row justify-between items-center hidden"
+      >
+        <div class="mb-4 sm:mb-0 sm:text-left text-center">
+          <h2 id="cityDate" class="font-bold text-xl mb-2"></h2>
+          <div class="text-base leading-relaxed">
+            Temperature: <span id="temp"></span>°C<br />
+            Wind: <span id="wind"></span> M/S<br />
+            Humidity: <span id="humidity"></span>%
+          </div>
+        </div>
+        <div class="text-center">
+          <img
+            id="weatherIcon"
+            src=""
+            alt="Weather Icon"
+            class="w-16 h-16 mx-auto"
+          />
+          <p id="weatherDesc" class="capitalize mt-1"></p>
+        </div>
+      </div>
+      <h3 id="forecastTitle" class="font-bold text-lg hidden">5-Day Forecast</h3>
+      <div
+        id="forecast"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+      ></div>
+    </section>
+  </main>
+
+  <script src="weather.js"></script>
+</body>
+</html>
